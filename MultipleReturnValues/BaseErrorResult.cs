@@ -6,9 +6,9 @@ using System.Text;
 namespace MultipleReturnValues
 {
     /// <summary>
-    /// BaseCommandResult is the result of any command/query which may or may not return errors.
+    /// BaseErrorResult is the result of any command/query which may or may not return errors.
     /// </summary>
-    public abstract class BaseCommandResult<TError>
+    public abstract class BaseErrorResult<TError>
         where TError : struct, Enum
     {
         #region Members

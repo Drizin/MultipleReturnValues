@@ -9,7 +9,7 @@ namespace MultipleReturnValues
     /// Returns the result of a command/query that outputs an entity
     /// </summary>
     [DebuggerDisplay("{Error == null ? Entity : Error,nq}")]
-    public class CommandResult<TEntity, TError> : BaseCommandResult<TError>
+    public class CommandResult<TEntity, TError> : BaseErrorResult<TError>
         where TEntity : class
         where TError : struct, Enum
     {
