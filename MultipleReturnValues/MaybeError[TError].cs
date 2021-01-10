@@ -10,29 +10,29 @@ namespace MultipleReturnValues
     /// May hold an ErrorResult{TError} if an error occurs
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToString()}")]
-    public class SuccessOrError<TError> : SuccessOrErrorBase<TError>
+    public class MaybeError<TError> : ResultOrErrorBase<TError>
         where TError : struct, Enum
     {
         #region Members
         #endregion
 
         #region ctor
-        public static SuccessOrError<TError> ValidationError(IList<ValidationError> validationErrors, string errorMessage = "Validation Error")
+        public static MaybeError<TError> ValidationError(IList<ValidationError> validationErrors, string errorMessage = "Validation Error")
         {
-            return new SuccessOrError<TError>() { ErrorResult = new ErrorResult<TError>(validationErrors, errorMessage) };
+            return new MaybeError<TError>() { ErrorResult = new ErrorResult<TError>(validationErrors, errorMessage) };
         }
-        public static SuccessOrError<TError> Fail(TError errorCode, string errorMessage = null)
+        public static MaybeError<TError> Fail(TError errorCode, string errorMessage = null)
         {
-            return new SuccessOrError<TError>() { ErrorResult = new ErrorResult<TError>(errorCode, errorMessage) };
+            return new MaybeError<TError>() { ErrorResult = new ErrorResult<TError>(errorCode, errorMessage) };
         }
-        public static SuccessOrError<TError> Success(string successMessage = "Success")
+        public static MaybeError<TError> Success(string successMessage = "Success")
         {
-            return new SuccessOrError<TError>() { SuccessMessage = successMessage };
+            return new MaybeError<TError>() { SuccessMessage = successMessage };
         }
         #endregion
 
         #region Implicit conversions from/to TError
-        public static implicit operator SuccessOrError<TError>(TError? error)
+        public static implicit operator MaybeError<TError>(TError? error)
         {
             //if you do "return (null)", it will be converted to a Success(). "return TError.SomeValue" will be converted to a Fail()
             if (error == null)
@@ -40,7 +40,7 @@ namespace MultipleReturnValues
             else
                 return Fail(error.Value);
         }
-        public static implicit operator TError?(SuccessOrError<TError> result)
+        public static implicit operator TError?(MaybeError<TError> result)
         {
             return result?.ErrorResult.ErrorCode;
         }
