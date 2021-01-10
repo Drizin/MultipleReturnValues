@@ -6,7 +6,7 @@ using System.Text;
 namespace MultipleReturnValues
 {
     /// <summary>
-    /// Base class for all classes that may return an ErrorResult{TError} OR ELSE (if success) will return some other result.
+    /// Base class for classes that may hold an ErrorResult{TError} if an error occurs.
     /// </summary>
     public abstract class SuccessOrErrorBase<TError> : IValidationErrorResult
         where TError : struct, Enum

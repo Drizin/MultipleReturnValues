@@ -6,7 +6,7 @@ using System.Text;
 namespace MultipleReturnValues
 {
     /// <summary>
-    /// Returns the result of a command/query that outputs an entity
+    /// May either hold an ErrorResult{TError} OR ELSE (if success) hold some other type (with the success result).
     /// </summary>
     [DebuggerDisplay("{Error == null ? Entity : Error,nq}")]
     public class SuccessOrError<TSuccess, TError> : SuccessOrErrorBase<TError>

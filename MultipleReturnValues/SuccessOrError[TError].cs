@@ -7,7 +7,7 @@ namespace MultipleReturnValues
 {
 
     /// <summary>
-    /// Returns the result of a command that does NOT output any entity, but may output an error (enum)
+    /// May hold an ErrorResult{TError} if an error occurs
     /// </summary>
     [DebuggerDisplay("{Error == null ? \"Success\" : Error,nq}")]
     public class SuccessOrError<TError> : SuccessOrErrorBase<TError>
