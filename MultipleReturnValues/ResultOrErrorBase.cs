@@ -9,7 +9,7 @@ namespace MultipleReturnValues
     /// Base class for classes that may hold an ErrorResult{TError} if an error occurs.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToString()}")]
-    public abstract class SuccessOrErrorBase<TError> : IValidationErrorResult
+    public abstract class ResultOrErrorBase<TError> : IValidationErrorResult
         where TError : struct, Enum
     {
         #region Members
