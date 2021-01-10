@@ -22,7 +22,7 @@ namespace MultipleReturnValues.Services
             public string UserName { get; set; }
         }
         List<string> existingUsers = new List<string>();
-        public SuccessOrError<User, CreateUserError> CreateUser(CreateUserDTO newUserInfo)
+        public ResultOrError<User, CreateUserError> CreateUser(CreateUserDTO newUserInfo)
         {
             if (newUserInfo != null && existingUsers.Contains(newUserInfo.UserName, StringComparer.OrdinalIgnoreCase))
                 return (null, CreateUserError.USERNAME_NOT_AVAILABLE);

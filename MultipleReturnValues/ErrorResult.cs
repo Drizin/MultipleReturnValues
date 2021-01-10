@@ -13,7 +13,7 @@ namespace MultipleReturnValues
     /// but may return some expected errors 
     /// (instead of throwing Exceptions which should be reserved for unexpected/unhandleable exceptions where you want to bubble up the error).
     /// Those methods should return null if no error happen.
-    /// This is also used in classes like SuccessOrError (for methods that may return an ErrorResult{TError} OR ELSE (if success) will return some other result)
+    /// This is also used in classes like ResultOrError (for methods that may return an ErrorResult{TError} OR ELSE (if success) will return some other result)
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToString()}")]
     public class ErrorResult<TError> : IValidationErrorResult
