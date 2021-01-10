@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace MultipleReturnValues.Tests
 {
-    public class CommandResultTests
+    public class ServiceTests
     {
         UserService svc;
 
@@ -14,7 +14,7 @@ namespace MultipleReturnValues.Tests
         }
 
         [Test, Order(0)]
-        public void Test1()
+        public void TestCreateUserOK()
         {
             var (user, error) = svc.CreateUser(new UserService.CreateUserDTO() { FirstName = "Rick", LastName = "Drizin", UserName = "drizin" });
 
@@ -23,7 +23,7 @@ namespace MultipleReturnValues.Tests
         }
 
         [Test, Order(1)]
-        public void Test2()
+        public void TestCreateUserNotAvailable()
         {
 
             var (user, error) = svc.CreateUser(new UserService.CreateUserDTO() { FirstName = "Rick", LastName = "Drizin", UserName = "drizin" });
@@ -33,7 +33,6 @@ namespace MultipleReturnValues.Tests
             Assert.That(error == UserService.CreateUserError.USERNAME_NOT_AVAILABLE);
 
         }
-
 
     }
 }
