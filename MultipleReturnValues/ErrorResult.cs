@@ -1,13 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 
 namespace MultipleReturnValues
 {
+    /// <summary>
+    /// This can be used as return by methods which do not return anything else 
+    /// but may return some expected errors 
+    /// (instead of throwing Exceptions which should be reserved for unexpected/unhandleable exceptions where you want to bubble up the error).
+    /// Those methods should return null if no error happen.
+    /// This is also used in classes like SuccessOrError (for methods that may return an ErrorResult{TError} OR ELSE (if success) will return some other result)
+    /// </summary>
     [DebuggerDisplay("{ErrorCode,nq} ({ErrorMessage})")]
-    public class ErrorResult<TError>
+    public class ErrorResult<TError> : IValidationErrorResult
         where TError : struct, Enum
     {
         #region Members
@@ -24,7 +33,12 @@ namespace MultipleReturnValues
         /// If anything is returned here you probably will want to bind the error back to the UI in the appropriate control which caused the error.
         /// </summary>
         public IReadOnlyCollection<ValidationError> ValidationErrors => _validationErrors == null ? null : new ReadOnlyCollection<ValidationError>(_validationErrors);
+        #endregion
 
+        #region IValidatableCommandResult
+        /// <summary>
+        /// Adds the specified validationError to the list of validation errors.
+        /// </summary>
         public void AddValidationError(string validationError)
         {
             if (_validationErrors == null)
@@ -32,6 +46,9 @@ namespace MultipleReturnValues
             _validationErrors.Add(new ValidationError() { ErrorMessage = validationError });
         }
 
+        /// <summary>
+        /// Adds the specified validationError to the list of validation errors.
+        /// </summary>
         public void AddValidationError(ValidationError validationError)
         {
             if (_validationErrors == null)
@@ -44,8 +61,10 @@ namespace MultipleReturnValues
         /// <summary>
         /// ErrorResult where error code is a well-defined enum
         /// </summary>
-        public ErrorResult(TError errorCode, string message = "Error")
+        public ErrorResult(TError errorCode, string message = null)
         {
+            if (message == null)
+                message = GetEnumDescription(errorCode) ?? "Error";
             ErrorCode = errorCode;
             ErrorMessage = message;
         }
@@ -144,6 +163,43 @@ namespace MultipleReturnValues
         //    return error?.ErrorCode;
         //}
         #endregion Equals / GetHashCode (including Conversions to TError enum)
+
+        #region ThrowException()
+        /// <summary>
+        /// Use this if you received an ErrorResult{TError} which you can't handle and want to bubble-up as an exception 
+        /// until some upper layer catches it, usually to abort the operation or the whole program
+        /// </summary>
+        public void ThrowException()
+        {
+            throw new ErrorResultException<TError>(this);
+        }
+        #endregion
+
+        #region Implicit conversions from TError
+        public static implicit operator ErrorResult<TError>(TError? error)
+        {
+            //if you do "return (null)", it will be converted to a Success(). "return TError.SomeValue" will be converted to a Fail()
+            if (error == null)
+                return null;
+            else
+                return new ErrorResult<TError>(error.Value);
+        }
+        #endregion
+
+        #region GetEnumDescription
+        private string GetEnumDescription(Enum value)
+        {
+            // Get the Description attribute value for the enum value
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attributes.Length > 0)
+                return attributes[0].Description;
+            //else
+            //    return value.ToString();
+            return null;
+        }
+        #endregion
 
     }
 }
