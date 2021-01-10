@@ -9,26 +9,26 @@ namespace MultipleReturnValues
     /// May either hold an ErrorResult{TError} OR ELSE (if success) hold some other type (with the success result).
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{ToString()}")]
-    public class SuccessOrError<TSuccess, TError> : SuccessOrErrorBase<TError>
-        where TSuccess : class
+    public class ResultOrError<TResult, TError> : ResultOrErrorBase<TError>
+        where TResult : class
         where TError : struct, Enum
     {
         #region Members
-        public TSuccess SuccessResult { get; set; }
+        public TResult SuccessResult { get; set; }
         #endregion
 
         #region ctor
-        public static SuccessOrError<TSuccess, TError> ValidationError(IList<ValidationError> validationErrors, string errorMessage = "Validation Error")
+        public static ResultOrError<TResult, TError> ValidationError(IList<ValidationError> validationErrors, string errorMessage = "Validation Error")
         {
-            return new SuccessOrError<TSuccess, TError>() { ErrorResult = new ErrorResult<TError>(validationErrors, errorMessage) };
+            return new ResultOrError<TResult, TError>() { ErrorResult = new ErrorResult<TError>(validationErrors, errorMessage) };
         }
-        public static SuccessOrError<TSuccess, TError> Fail(TError errorCode, string errorMessage = null)
+        public static ResultOrError<TResult, TError> Fail(TError errorCode, string errorMessage = null)
         {
-            return new SuccessOrError<TSuccess, TError>() { ErrorResult = new ErrorResult<TError>(errorCode, errorMessage) };
+            return new ResultOrError<TResult, TError>() { ErrorResult = new ErrorResult<TError>(errorCode, errorMessage) };
         }
-        public static SuccessOrError<TSuccess, TError> Success(TSuccess successResult, string successMessage = "Success")
+        public static ResultOrError<TResult, TError> Success(TResult successResult, string successMessage = "Success")
         {
-            return new SuccessOrError<TSuccess, TError>() { SuccessResult = successResult, SuccessMessage = successMessage };
+            return new ResultOrError<TResult, TError>() { SuccessResult = successResult, SuccessMessage = successMessage };
         }
         #endregion
 
@@ -57,7 +57,7 @@ namespace MultipleReturnValues
         #endregion
 
         #region Implicit conversions from ValueTuple syntax
-        public static implicit operator SuccessOrError<TSuccess, TError>(ValueTuple<TSuccess, TError?> tuple)
+        public static implicit operator ResultOrError<TResult, TError>(ValueTuple<TResult, TError?> tuple)
         {
             if (tuple.Item1 != null && tuple.Item2 == null)
                 return Success(tuple.Item1);
@@ -68,7 +68,7 @@ namespace MultipleReturnValues
         #endregion
 
         #region Descontruct to ValueTuple
-        public void Deconstruct(out TSuccess result, out ErrorResult<TError> error) => (result, error) = (this.SuccessResult, this.ErrorResult);
+        public void Deconstruct(out TResult result, out ErrorResult<TError> error) => (result, error) = (this.SuccessResult, this.ErrorResult);
         #endregion
 
 
