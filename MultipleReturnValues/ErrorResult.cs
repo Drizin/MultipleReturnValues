@@ -15,7 +15,7 @@ namespace MultipleReturnValues
     /// Those methods should return null if no error happen.
     /// This is also used in classes like SuccessOrError (for methods that may return an ErrorResult{TError} OR ELSE (if success) will return some other result)
     /// </summary>
-    [DebuggerDisplay("{ErrorCode,nq} ({ErrorMessage})")]
+    [System.Diagnostics.DebuggerDisplay("{ToString()}")]
     public class ErrorResult<TError> : IValidationErrorResult
         where TError : struct, Enum
     {
@@ -198,6 +198,20 @@ namespace MultipleReturnValues
             //else
             //    return value.ToString();
             return null;
+        }
+        #endregion
+
+        #region ToString()
+        public override string ToString()
+        {
+            if (ErrorCode == null)
+                return "Error" 
+                    + (ErrorMessage != null ? $@" (""{ErrorMessage}"")" : "");
+
+            string description = GetEnumDescription(ErrorCode);
+            return "Error: " + ErrorCode.ToString() 
+                + (description == null ? "" : $@" (""{description}"")")
+                + ((ErrorMessage != null && ErrorMessage != description && ErrorMessage != "Error") ? $@" (""{ErrorMessage}"")" : "");
         }
         #endregion
 

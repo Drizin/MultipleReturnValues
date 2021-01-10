@@ -9,7 +9,7 @@ namespace MultipleReturnValues
     /// <summary>
     /// May hold an ErrorResult{TError} if an error occurs
     /// </summary>
-    [DebuggerDisplay("{Error == null ? \"Success\" : Error,nq}")]
+    [System.Diagnostics.DebuggerDisplay("{ToString()}")]
     public class SuccessOrError<TError> : SuccessOrErrorBase<TError>
         where TError : struct, Enum
     {

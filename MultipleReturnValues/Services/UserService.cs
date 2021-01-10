@@ -10,6 +10,7 @@ namespace MultipleReturnValues.Services
     {
         public enum CreateUserError
         {
+            [System.ComponentModel.Description("Username not available")]
             USERNAME_NOT_AVAILABLE,
             WEAK_PASSWORD,
         }

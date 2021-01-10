@@ -8,7 +8,7 @@ namespace MultipleReturnValues
     /// <summary>
     /// May either hold an ErrorResult{TError} OR ELSE (if success) hold some other type (with the success result).
     /// </summary>
-    [DebuggerDisplay("{Error == null ? Entity : Error,nq}")]
+    [System.Diagnostics.DebuggerDisplay("{ToString()}")]
     public class SuccessOrError<TSuccess, TError> : SuccessOrErrorBase<TError>
         where TSuccess : class
         where TError : struct, Enum
@@ -26,9 +26,9 @@ namespace MultipleReturnValues
         {
             return new SuccessOrError<TSuccess, TError>() { ErrorResult = new ErrorResult<TError>(errorCode, errorMessage) };
         }
-        public static SuccessOrError<TSuccess, TError> Success(TSuccess entity, string successMessage = "Success")
+        public static SuccessOrError<TSuccess, TError> Success(TSuccess successResult, string successMessage = "Success")
         {
-            return new SuccessOrError<TSuccess, TError>() { SuccessResult = entity, SuccessMessage = successMessage };
+            return new SuccessOrError<TSuccess, TError>() { SuccessResult = successResult, SuccessMessage = successMessage };
         }
         #endregion
 
@@ -50,7 +50,7 @@ namespace MultipleReturnValues
         public override string ToString()
         {
             if (this.IsSuccess)
-                return $"Success: {this.SuccessMessage}: {this.SuccessResult.ToString()}";
+                return $"{base.ToString()}: [{this.SuccessResult.GetType().Name}] {{ {this.SuccessResult.ToString()} }}";
             else
                 return base.ToString();
         }
@@ -68,7 +68,7 @@ namespace MultipleReturnValues
         #endregion
 
         #region Descontruct to ValueTuple
-        public void Deconstruct(out TSuccess entity, out ErrorResult<TError> error) => (entity, error) = (this.SuccessResult, this.ErrorResult);
+        public void Deconstruct(out TSuccess result, out ErrorResult<TError> error) => (result, error) = (this.SuccessResult, this.ErrorResult);
         #endregion
 
 

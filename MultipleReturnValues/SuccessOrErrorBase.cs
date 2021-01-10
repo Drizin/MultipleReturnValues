@@ -8,6 +8,7 @@ namespace MultipleReturnValues
     /// <summary>
     /// Base class for classes that may hold an ErrorResult{TError} if an error occurs.
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{ToString()}")]
     public abstract class SuccessOrErrorBase<TError> : IValidationErrorResult
         where TError : struct, Enum
     {
@@ -63,9 +64,9 @@ namespace MultipleReturnValues
         public override string ToString()
         {
             if (this.IsSuccess)
-                return $"Success: {this.SuccessMessage}";
+                return "Success" + ((SuccessMessage == null || SuccessMessage == "Success") ? "" : $@" (""{this.SuccessMessage}"")");
             else
-                return $"Error: {this.ErrorResult?.ErrorCode?.ToString()} - {this.ErrorResult?.ErrorMessage}";
+                return this.ErrorResult.ToString();
         }
         #endregion
     }
